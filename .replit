@@ -1,0 +1,36 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Robot Simulation Game"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "robot_simulation_game"
+
+[[workflows.workflow]]
+name = "Robot Simulation Game"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pygame && python main.py"
+
+[[workflows.workflow]]
+name = "robot_simulation_game"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pygame && python main.py"
