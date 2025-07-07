@@ -6,35 +6,21 @@ class Eden(RobotBase):
         super().__init__(x, y, "Eden")
     
     def getMoveDirection(self):
-        """Eden moves towards the closest coin"""
-        # Check for coins in all directions
+        """Eden moves randomly, avoiding walls"""
+        # Example: Check for coins in all directions (but don't use the information)
         north_distance = self.isCoinInDirection(0)  # Check north
         east_distance = self.isCoinInDirection(1)   # Check east
         south_distance = self.isCoinInDirection(2)  # Check south
         west_distance = self.isCoinInDirection(3)   # Check west
-        
-        # Find the direction with the closest coin
-        distances = [north_distance, east_distance, south_distance, west_distance]
-        
-        # Filter out directions with no coins (distance 0) and find the shortest
-        valid_directions = []
-        for i, distance in enumerate(distances):
-            if distance > 0:  # There's a coin in this direction
-                valid_directions.append((i, distance))
-        
-        if valid_directions:
-            # Sort by distance and get the closest direction
-            valid_directions.sort(key=lambda x: x[1])
-            best_direction = valid_directions[0][0]
-            
-            # Check if we can move in that direction
-            if self.movementAllowed(best_direction):
-                return best_direction
-        
-        # If no coins found or can't move toward closest coin, move randomly but avoid walls
+        # These values are available but we ignore them and move randomly
+        shortest = 1000000000000000000000000000000000000000000000000000
+        for distance in [north_distance, east_distance, south_distance, west_distance]:
+            if distance < shortest:
+                shortest = distance 
+                direction = 
         attempts = 0
         while attempts < 10:  # Prevent infinite loop
-            direction = random.randint(0, 3)
+            direction = shortest
             if self.movementAllowed(direction):
                 return direction
             attempts += 1
