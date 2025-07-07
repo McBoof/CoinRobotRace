@@ -38,6 +38,7 @@ class Game:
         self.GREEN = (0, 255, 0)
         self.BLUE = (0, 0, 255)
         self.RED = (255, 0, 0)
+        self.LIGHT_RED = (255, 150, 150)
         
         # Initialize pygame
         self.screen = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
@@ -52,6 +53,7 @@ class Game:
         self.robots = []
         self.speech_bubbles = []  # List of (robot, text, end_time)
         self.bash_flashes = []  # List of (x, y, end_time) for red flash effects
+        self.robots_bashing = set()  # Set of robots currently bashing (can't move)
         
         # Timing
         self.last_coin_spawn = time.time()
@@ -101,7 +103,7 @@ class Game:
         random.shuffle(robot_order)
         
         for robot in robot_order:
-            if robot.alive:
+            if robot.alive and robot not in self.robots_bashing:
                 # Get movement direction from robot
                 try:
                     direction = robot.getMoveDirection()
@@ -145,11 +147,17 @@ class Game:
     
     def robot_bash(self):
         """Make robots bash every 5 seconds"""
+        # Clear previous bashing robots
+        self.robots_bashing.clear()
+        
         for robot in self.robots:
             if robot.alive:
                 try:
                     bash_dir = robot.bashDirection()
                     if bash_dir is not None:
+                        # Add robot to bashing set (prevents movement this turn)
+                        self.robots_bashing.add(robot)
+                        
                         # Calculate bash target position
                         bash_x, bash_y = robot.x, robot.y
                         if bash_dir == 0:  # North
@@ -242,7 +250,7 @@ class Game:
         for flash_x, flash_y, end_time in self.bash_flashes:
             flash_rect = pygame.Rect(flash_x * self.TILE_SIZE, flash_y * self.TILE_SIZE, 
                                    self.TILE_SIZE, self.TILE_SIZE)
-            pygame.draw.rect(self.screen, self.RED, flash_rect)
+            pygame.draw.rect(self.screen, self.LIGHT_RED, flash_rect)
         
         # Draw robots
         for robot in self.robots:
