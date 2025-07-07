@@ -66,6 +66,8 @@ class Game:
         
         # Game loop control
         self.running = True
+        self.game_won = False
+        self.winner = None
         
     def init_robots(self):
         """Initialize all 12 robots with random starting positions"""
@@ -134,13 +136,19 @@ class Game:
                         self.coins.remove((new_x, new_y))
                         robot.score += 1
                         
-                        # Trigger celebration
-                        try:
-                            celebration_text = robot.celebrate()
-                            if celebration_text:
-                                self.add_speech_bubble(robot, celebration_text, 3.0)
-                        except:
-                            self.add_speech_bubble(robot, f"{robot.name} celebrates!", 3.0)
+                        # Check for win condition
+                        if robot.score >= 10:
+                            self.game_won = True
+                            self.winner = robot
+                            self.add_speech_bubble(robot, f"{robot.name} wins!", 5.0)
+                        else:
+                            # Trigger celebration
+                            try:
+                                celebration_text = robot.celebrate()
+                                if celebration_text:
+                                    self.add_speech_bubble(robot, celebration_text, 3.0)
+                            except:
+                                self.add_speech_bubble(robot, f"{robot.name} celebrates!", 3.0)
                     
                     # Move robot
                     robot.x, robot.y = new_x, new_y
@@ -306,7 +314,10 @@ class Game:
                         (leaderboard_x, leaderboard_y, leaderboard_width, leaderboard_height), 2)
         
         # Draw title
-        title_text = self.font.render("Leaderboard", True, self.BLACK)
+        if self.game_won:
+            title_text = self.font.render(f"{self.winner.name} WINS!", True, self.RED)
+        else:
+            title_text = self.font.render("Leaderboard", True, self.BLACK)
         self.screen.blit(title_text, (leaderboard_x + 10, leaderboard_y + 10))
         
         # Draw robot scores
@@ -323,6 +334,12 @@ class Game:
     
     def update(self):
         """Update game state"""
+        # Don't update if game is won
+        if self.game_won:
+            self.update_speech_bubbles()
+            self.update_bash_flashes()
+            return
+            
         current_time = time.time()
         
         # Spawn coins every second
