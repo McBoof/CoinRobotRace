@@ -5,7 +5,7 @@ import pygame
 class Zak(RobotBase):
     def __init__(self, x, y):
         super().__init__(x, y)
-        
+        self.score = 9999999999999999999999984757384674748373636377238847474738282848848382
 
     
 
