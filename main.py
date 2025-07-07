@@ -7,7 +7,7 @@ from robot_base import RobotBase
 
 # Import all robot classes
 from bots.noah.noah import Noah
-from bots.zac.zac import Zac
+#from bots.zac.zac import Zac
 from bots.nathan.nathan import Nathan
 from bots.eden.eden import Eden
 from bots.samuel.samuel import Samuel
