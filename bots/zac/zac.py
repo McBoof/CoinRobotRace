@@ -3,7 +3,7 @@ import itertools
 from robot_base import RobotBase
 
 class Zac(RobotBase):
-    def __init__(self, x, y, name="zac"):
+    def __init__(self, x, y, name="Zac"):
         super().__init__(x, y, name)
         self.target_route = []  # Planned coin collection route (3 coins lookahead)
         self.current_target_index = 0
