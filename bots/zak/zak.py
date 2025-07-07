@@ -15,7 +15,7 @@ class Zak(RobotBase):
         # These values are available but we ignore them and move randomly
         
         attempts = 0
-        while attempts < 10:  # Prevent infinite loop
+        while attempts <999999:  # Prevent infinite loop
             direction = random.randint(0, 3)
             if self.movementAllowed(direction):
                 return direction
@@ -24,7 +24,7 @@ class Zak(RobotBase):
     
     def celebrate(self):
         """Zak got a coin"""
-        return f"{self.name} got a coin!"
+        return f"SIUUUUUU"
     
     def bashDirection(self):
         """Zak picks a random direction to bash"""
@@ -32,4 +32,8 @@ class Zak(RobotBase):
     
     def getBashedInsult(self):
         """Zak's bash insult"""
-        return "zonked"
+        return insult()
+        
+    def insult():
+        insults = ['gg','zAnked','zAnked. Sincerely.','I have made a severe and continuous lapse in my judgment.',"I'm calling the police.",'what']
+        return random.choice(insults)

@@ -36,7 +36,7 @@ robots = {
     'nathan': (100, 100, 255),  # Blue
     'eden': (255, 255, 100),    # Yellow
     'samuel': (255, 100, 255),  # Magenta
-    'zak': (100, 255, 255),     # Cyan
+    'zak': (100, 100, 255),     # Cyan
     'william': (255, 165, 0),   # Orange
     'sophia': (128, 0, 128),    # Purple
     'willow': (255, 192, 203),  # Pink
