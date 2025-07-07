@@ -26,6 +26,10 @@ class Zac(RobotBase):
         """Zac got a coin"""
         return f"{self.name} got a coin!"
     
+    def bashDirection(self):
+        """Zac picks a random direction to bash"""
+        return random.randint(0, 3)
+    
     def getBashedInsult(self):
         """Zac's bash insult"""
         return "zapped"

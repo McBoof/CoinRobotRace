@@ -26,6 +26,10 @@ class Eden(RobotBase):
         """Eden got a coin"""
         return f"{self.name} got a coin!"
     
+    def bashDirection(self):
+        """Eden picks a random direction to bash"""
+        return random.randint(0, 3)
+    
     def getBashedInsult(self):
         """Eden's bash insult"""
         return "eliminated"

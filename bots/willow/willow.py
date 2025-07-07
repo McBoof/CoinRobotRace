@@ -26,6 +26,10 @@ class Willow(RobotBase):
         """Willow got a coin"""
         return f"{self.name} got a coin!"
     
+    def bashDirection(self):
+        """Willow picks a random direction to bash"""
+        return random.randint(0, 3)
+    
     def getBashedInsult(self):
         """Willow's bash insult"""
         return "whipped"

@@ -26,6 +26,10 @@ class Noah(RobotBase):
         """Noah got a coin"""
         return f"{self.name} got a coin!"
     
+    def bashDirection(self):
+        """Noah picks a random direction to bash"""
+        return random.randint(0, 3)
+    
     def getBashedInsult(self):
         """Noah's bash insult"""
         return "smashed"

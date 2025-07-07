@@ -26,6 +26,10 @@ class Sophia(RobotBase):
         """Sophia got a coin"""
         return f"{self.name} got a coin!"
     
+    def bashDirection(self):
+        """Sophia picks a random direction to bash"""
+        return random.randint(0, 3)
+    
     def getBashedInsult(self):
         """Sophia's bash insult"""
         return "schooled"
