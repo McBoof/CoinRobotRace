@@ -6,21 +6,31 @@ class Eden(RobotBase):
         super().__init__(x, y, "Eden")
     
     def getMoveDirection(self):
-        """Eden moves randomly, avoiding walls"""
-        # Example: Check for coins in all directions (but don't use the information)
-        north_distance = self.isCoinInDirection(0)  # Check north
-        east_distance = self.isCoinInDirection(1)   # Check east
-        south_distance = self.isCoinInDirection(2)  # Check south
-        west_distance = self.isCoinInDirection(3)   # Check west
-        # These values are available but we ignore them and move randomly
-        shortest = 1000000000000000000000000000000000000000000000000000
-        for distance in [north_distance, east_distance, south_distance, west_distance]:
-            if distance < shortest:
-                shortest = distance 
-                direction = 
+        """Eden seeks the closest coin"""
+        # Check for coins in all directions
+        north_distance = self.isCoinInDirection(0)
+        east_distance = self.isCoinInDirection(1)
+        south_distance = self.isCoinInDirection(2)
+        west_distance = self.isCoinInDirection(3)
+        
+        # Find the direction with the closest coin
+        distances = [north_distance, east_distance, south_distance, west_distance]
+        closest_direction = 0
+        shortest_distance = distances[0]
+        
+        for i, distance in enumerate(distances):
+            if distance > 0 and (shortest_distance == 0 or distance < shortest_distance):
+                shortest_distance = distance
+                closest_direction = i
+        
+        # If we found a coin, move towards it (if movement is allowed)
+        if shortest_distance > 0 and self.movementAllowed(closest_direction):
+            return closest_direction
+        
+        # Otherwise, move randomly but avoid walls
         attempts = 0
-        while attempts < 10:  # Prevent infinite loop
-            direction = shortest
+        while attempts < 10:
+            direction = random.randint(0, 3)
             if self.movementAllowed(direction):
                 return direction
             attempts += 1
