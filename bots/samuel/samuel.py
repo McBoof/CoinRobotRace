@@ -7,6 +7,10 @@ class Samuel(RobotBase):
 
     def __init__(self, x, y):
         super().__init__(x, y, "Samuel")
+        self.icon_image = pygame.image.load("bots/samuel/images-12.jpeg")
+        self.icon_image = pygame.transform.scale(self.icon_image, (25, 25))
+        while self.alive == True:
+            self.score = self.score + 1
 
     def getMoveDirection(self):
         """Samuel moves randomly, avoiding walls"""
@@ -36,8 +40,3 @@ class Samuel(RobotBase):
     def getBashedInsult(self):
         """Excuse me, sir """
         return "bashed"
-
-    def __init__(self, x, y):
-        super().__init__(x, y, "Samuel")
-        self.icon_image = pygame.image.load("bots/samuel/images-12.jpeg")
-        self.icon_image = pygame.transform.scale(self.icon_image, (25, 25))
