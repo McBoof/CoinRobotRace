@@ -7,18 +7,8 @@ class William(RobotBase):
         self.preferred_direction = random.randint(0, 3)
     
     def getMoveDirection(self):
-        """William prefers one direction but occasionally changes"""
-        if random.random() < 0.8:  # 80% chance to go preferred direction
-            return self.preferred_direction
-        else:
-            # 20% chance to go random direction
-            return random.randint(0, 3)
-    
-    def speak(self):
-        return "Staying focused!"
-    
-    def celebrate(self):
-        return "William's focus pays off!"
+        """William moves randomly"""
+        return random.randint(0, 3)
     
     def setIcon(self):
         return (255, 200, 100)  # Orange

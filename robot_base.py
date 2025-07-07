@@ -24,7 +24,7 @@ class RobotBase:
         Returns:
             str: Text to display in speech bubble
         """
-        return self.name
+        return f"{self.name} here"
     
     def celebrate(self):
         """

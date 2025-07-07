@@ -25,7 +25,7 @@ class Game:
         
         # Game constants
         self.WORLD_SIZE = 30
-        self.TILE_SIZE = 8
+        self.TILE_SIZE = 24
         self.WINDOW_WIDTH = self.WORLD_SIZE * self.TILE_SIZE + 200  # Extra space for UI
         self.WINDOW_HEIGHT = self.WORLD_SIZE * self.TILE_SIZE
         
@@ -232,14 +232,18 @@ class Game:
         # Sort robots by score (descending)
         sorted_robots = sorted(self.robots, key=lambda r: r.score, reverse=True)
         
-        # Draw leaderboard background
+        # Draw leaderboard background (semi-transparent)
         leaderboard_x = self.WORLD_SIZE * self.TILE_SIZE + 10
         leaderboard_y = 10
         leaderboard_width = 180
         leaderboard_height = len(sorted_robots) * 25 + 40
         
-        pygame.draw.rect(self.screen, self.LIGHT_GRAY, 
-                        (leaderboard_x, leaderboard_y, leaderboard_width, leaderboard_height))
+        # Create semi-transparent surface
+        leaderboard_surface = pygame.Surface((leaderboard_width, leaderboard_height))
+        leaderboard_surface.set_alpha(150)  # Semi-transparent
+        leaderboard_surface.fill(self.LIGHT_GRAY)
+        self.screen.blit(leaderboard_surface, (leaderboard_x, leaderboard_y))
+        
         pygame.draw.rect(self.screen, self.BLACK, 
                         (leaderboard_x, leaderboard_y, leaderboard_width, leaderboard_height), 2)
         
@@ -268,8 +272,8 @@ class Game:
             self.spawn_coin()
             self.last_coin_spawn = current_time
         
-        # Move robots every second
-        if current_time - self.last_robot_move >= 1.0:
+        # Move robots every 0.5 seconds
+        if current_time - self.last_robot_move >= 0.5:
             self.move_robots()
             self.last_robot_move = current_time
         

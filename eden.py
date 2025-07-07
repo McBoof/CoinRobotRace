@@ -10,21 +10,8 @@ class Eden(RobotBase):
         self.max_steps = 1
     
     def getMoveDirection(self):
-        """Eden moves in a spiral pattern"""
-        if self.steps_in_direction >= self.max_steps:
-            self.spiral_direction = (self.spiral_direction + 1) % 4
-            self.steps_in_direction = 0
-            if self.spiral_direction % 2 == 0:  # Every other turn, increase max steps
-                self.max_steps += 1
-        
-        self.steps_in_direction += 1
-        return self.spiral_direction
-    
-    def speak(self):
-        return "Spiraling outward!"
-    
-    def celebrate(self):
-        return "Eden's spiral wins!"
+        """Eden moves randomly"""
+        return random.randint(0, 3)
     
     def setIcon(self):
         return (255, 255, 100)  # Yellow
