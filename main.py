@@ -147,9 +147,6 @@ class Game:
     
     def robot_bash(self):
         """Make robots bash every 5 seconds"""
-        # Clear previous bashing robots
-        self.robots_bashing.clear()
-        
         for robot in self.robots:
             if robot.alive:
                 try:
@@ -341,6 +338,12 @@ class Game:
         if current_time - self.last_bash_time >= 5.0:
             self.robot_bash()
             self.last_bash_time = current_time
+        
+        # Clear bashing robots after each movement cycle (they can move again next cycle)
+        # This happens after bash but before next movement
+        current_move_time = current_time - self.last_robot_move
+        if current_move_time >= 0.25:  # Clear halfway through movement cycle
+            self.robots_bashing.clear()
         
         # Robots no longer speak automatically - only when they get coins
         
