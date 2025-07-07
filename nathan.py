@@ -11,5 +11,4 @@ class Nathan(RobotBase):
         """Nathan moves randomly"""
         return random.randint(0, 3)
     
-    def setIcon(self):
-        return (100, 100, 255)  # Blue
+

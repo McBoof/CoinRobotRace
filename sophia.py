@@ -12,5 +12,4 @@ class Sophia(RobotBase):
         """Sophia moves randomly"""
         return random.randint(0, 3)
     
-    def setIcon(self):
-        return (200, 100, 255)  # Purple
+

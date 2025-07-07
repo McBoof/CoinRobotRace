@@ -10,5 +10,4 @@ class Zak(RobotBase):
         """Zak moves randomly"""
         return random.randint(0, 3)
     
-    def setIcon(self):
-        return (100, 255, 255)  # Cyan
+

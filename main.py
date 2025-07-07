@@ -191,15 +191,11 @@ class Game:
         # Draw robots
         for robot in self.robots:
             if robot.alive:
-                # Get robot icon/color
-                icon_color = robot.getIcon()
+                # Get robot icon image
+                icon_image = robot.getIcon()
                 
-                # Draw robot as colored rectangle
-                pygame.draw.rect(self.screen, icon_color,
-                               (robot.x * self.TILE_SIZE + 1, 
-                                robot.y * self.TILE_SIZE + 1,
-                                self.TILE_SIZE - 2, 
-                                self.TILE_SIZE - 2))
+                # Draw robot icon
+                self.screen.blit(icon_image, (robot.x * self.TILE_SIZE, robot.y * self.TILE_SIZE))
                 
                 # Draw robot name (small text)
                 name_text = self.small_font.render(robot.name[:3], True, self.BLACK)
@@ -277,10 +273,7 @@ class Game:
             self.move_robots()
             self.last_robot_move = current_time
         
-        # Make robots speak every 10 seconds
-        if current_time - self.last_robot_speak >= 10.0:
-            self.robot_speak()
-            self.last_robot_speak = current_time
+        # Robots no longer speak automatically - only when they get coins
         
         # Update speech bubbles
         self.update_speech_bubbles()

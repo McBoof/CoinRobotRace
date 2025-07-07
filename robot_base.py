@@ -1,4 +1,6 @@
 import random
+import pygame
+import os
 
 class RobotBase:
     def __init__(self, x, y, name):
@@ -7,7 +9,7 @@ class RobotBase:
         self.name = name
         self.score = 0
         self.alive = True
-        self.icon_color = self.setIcon()
+        self.icon_image = self.loadIcon()
     
     def getMoveDirection(self):
         """
@@ -35,20 +37,31 @@ class RobotBase:
         """
         return f"{self.name} got a coin!"
     
-    def setIcon(self):
+    def loadIcon(self):
         """
-        Override this method to set robot icon.
-        Since we can't use image files, return a color tuple.
+        Load the robot's PNG icon.
         Returns:
-            tuple: RGB color tuple (r, g, b)
+            pygame.Surface: The loaded icon image
         """
-        # Default random color
-        return (random.randint(100, 255), random.randint(100, 255), random.randint(100, 255))
+        icon_path = f"{self.name.lower()}.png"
+        if os.path.exists(icon_path):
+            try:
+                return pygame.image.load(icon_path)
+            except:
+                # If loading fails, create a default colored rectangle
+                surface = pygame.Surface((24, 24))
+                surface.fill((random.randint(100, 255), random.randint(100, 255), random.randint(100, 255)))
+                return surface
+        else:
+            # If file doesn't exist, create a default colored rectangle
+            surface = pygame.Surface((24, 24))
+            surface.fill((random.randint(100, 255), random.randint(100, 255), random.randint(100, 255)))
+            return surface
     
     def getIcon(self):
         """
-        Get the robot's icon color.
+        Get the robot's icon image.
         Returns:
-            tuple: RGB color tuple
+            pygame.Surface: The icon image
         """
-        return self.icon_color
+        return self.icon_image

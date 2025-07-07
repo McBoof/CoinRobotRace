@@ -11,5 +11,4 @@ class Willow(RobotBase):
         """Willow moves randomly"""
         return random.randint(0, 3)
     
-    def setIcon(self):
-        return (150, 255, 150)  # Light Green
+
