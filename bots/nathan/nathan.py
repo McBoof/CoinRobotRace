@@ -1,12 +1,14 @@
 import random
+import itertools
 from robot_base import RobotBase
-
 
 class Nathan(RobotBase):
     def __init__(self, x, y, name="nathan"):
         super().__init__(x, y, name)
-        self.target_route = []  # Planned coin collection route
+        self.target_route = []  # Planned coin collection route (3 coins lookahead)
         self.current_target_index = 0
+        self.previous_coins = set()  # Track coins from last check to detect new coins
+        self.distance_cache = {}  # Cache Manhattan distances to avoid recomputation
 
     def speak(self):
         return f"{self.name} collecting coins!"
@@ -18,66 +20,100 @@ class Nathan(RobotBase):
         return "bam!"
 
     def bashDirection(self):
-        # Randomly pick a bash direction (0=N,1=E,2=S,3=W)
+        # Random bash direction (0=N,1=E,2=S,3=W)
         return random.randint(0, 3)
 
-    def calculate_coin_interest(self, coins):
+    def manhattan_distance(self, a, b):
+        # Cache distances for speed
+        key = (a, b) if a <= b else (b, a)
+        if key not in self.distance_cache:
+            self.distance_cache[key] = abs(a[0] - b[0]) + abs(a[1] - b[1])
+        return self.distance_cache[key]
+
+    def should_recalculate_route(self, current_coins):
         """
-        Calculate the interest for each coin.
-        Interest = sum over other coins of (60 / Manhattan distance to other coin)
-        coins: list of (x,y) tuples for coin positions
-        Returns: dict mapping coin -> interest score (float)
+        Return True if a new coin appeared among the 8 closest coins.
         """
-        interest_scores = {}
-        for i, c1 in enumerate(coins):
-            interest = 0.0
-            for j, c2 in enumerate(coins):
-                if i == j:
-                    continue
-                dist = abs(c1[0] - c2[0]) + abs(c1[1] - c2[1])
-                if dist == 0:
-                    continue
-                interest += 60 / dist
-            interest_scores[c1] = interest
-        return interest_scores
+        new_coins = current_coins - self.previous_coins
+        if not new_coins:
+            return False
+
+        # Find 8 closest coins to current position
+        sorted_coins = sorted(current_coins, key=lambda c: self.manhattan_distance((self.x, self.y), c))
+        closest_coins = set(sorted_coins[:8])
+
+        # If any new coin is in the 8 closest, recalc route
+        for coin in new_coins:
+            if coin in closest_coins:
+                return True
+
+        return False
 
     def plan_route(self):
         """
-        Plan a route for collecting coins:
-        1. Find coin with highest interest.
-        2. Then add coins greedily based on shortest Manhattan distance from last added coin.
-        Updates self.target_route with ordered list of coins.
+        Plan the optimal route looking 3 moves ahead by checking all permutations
+        of 3 coins, choose the minimal total Manhattan distance path.
+
+        Updates self.target_route with first 3 coins in optimal order.
         Resets current_target_index to 0.
         """
         if not hasattr(self.game_instance, "coins") or len(self.game_instance.coins) == 0:
             self.target_route = []
             self.current_target_index = 0
+            self.previous_coins = set()
             return
 
-        coins = list(self.game_instance.coins)
-        interest_scores = self.calculate_coin_interest(coins)
+        current_coins = set(self.game_instance.coins)
 
-        # 1. Find coin with highest interest
-        start_coin = max(interest_scores, key=interest_scores.get)
+        # Clear distance cache every time to keep it fresh and small
+        self.distance_cache.clear()
 
-        route = [start_coin]
-        remaining = set(coins)
-        remaining.remove(start_coin)
+        # Check if we should recalc
+        if self.previous_coins and not self.should_recalculate_route(current_coins):
+            # No need to recalc route, keep old route
+            return
 
-        # 2. Greedy add coins based on shortest distance to last coin in route
-        while remaining:
-            last = route[-1]
-            next_coin = min(remaining, key=lambda c: abs(c[0] - last[0]) + abs(c[1] - last[1]))
-            route.append(next_coin)
-            remaining.remove(next_coin)
+        self.previous_coins = current_coins.copy()
 
-        self.target_route = route
+        # If fewer than 3 coins, just plan route greedily for all coins
+        if len(current_coins) <= 3:
+            # Greedy shortest path for all coins
+            coins = list(current_coins)
+            route = []
+            pos = (self.x, self.y)
+            while coins:
+                next_coin = min(coins, key=lambda c: self.manhattan_distance(pos, c))
+                route.append(next_coin)
+                pos = next_coin
+                coins.remove(next_coin)
+            self.target_route = route
+            self.current_target_index = 0
+            return
+
+        # More than 3 coins: check all permutations of 3 coins to find minimal route
+        min_distance = float('inf')
+        best_route = None
+        coins_list = list(current_coins)
+        start_pos = (self.x, self.y)
+
+        for combo in itertools.permutations(coins_list, 4):
+            # Total distance from current position to first coin + first to second + second to third
+            dist = (self.manhattan_distance(start_pos, combo[0]) +
+                    self.manhattan_distance(combo[0], combo[1]) +
+                    self.manhattan_distance(combo[1], combo[2]))
+
+            if dist < min_distance:
+                min_distance = dist
+                best_route = combo
+
+        self.target_route = list(best_route)
         self.current_target_index = 0
 
     def getMoveDirection(self):
         """
-        Decide the next move direction towards the current target coin.
-        If no coins or route is empty, move randomly.
+        Decide next move towards current target coin.
+        If no coins or route empty, move randomly.
+        Recalculate route as needed.
         """
         if not hasattr(self.game_instance, "coins") or len(self.game_instance.coins) == 0:
             # No coins visible, move randomly but allowed
@@ -89,20 +125,18 @@ class Nathan(RobotBase):
                 attempts += 1
             return 0  # default north if stuck
 
-        # Replan route if coins changed or no route planned
-        if not self.target_route or self.current_target_index >= len(self.target_route):
-            self.plan_route()
+        # Plan or replan route if needed
+        self.plan_route()
 
-        # If route empty after plan (no coins), move randomly
         if not self.target_route:
             return random.randint(0, 3)
 
+        # If reached current target coin, advance to next coin
         target = self.target_route[self.current_target_index]
-
-        # If reached the coin, move to next target
         if (self.x, self.y) == target:
             self.current_target_index += 1
             if self.current_target_index >= len(self.target_route):
+                # Finished route, plan again next tick
                 self.plan_route()
                 if not self.target_route:
                     return random.randint(0, 3)
@@ -114,7 +148,7 @@ class Nathan(RobotBase):
         possible_moves = []
 
         if abs(dx) > abs(dy):
-            # Prioritize horizontal move
+            # Prioritize horizontal moves
             if dx > 0 and self.movementAllowed(1):
                 possible_moves.append(1)
             elif dx < 0 and self.movementAllowed(3):
@@ -124,7 +158,7 @@ class Nathan(RobotBase):
             elif dy < 0 and self.movementAllowed(0):
                 possible_moves.append(0)
         else:
-            # Prioritize vertical move
+            # Prioritize vertical moves
             if dy > 0 and self.movementAllowed(2):
                 possible_moves.append(2)
             elif dy < 0 and self.movementAllowed(0):
@@ -134,7 +168,7 @@ class Nathan(RobotBase):
             elif dx < 0 and self.movementAllowed(3):
                 possible_moves.append(3)
 
-        # If no prioritized moves allowed, fallback to any allowed move
+        # Fallback to any allowed move if none prioritized
         if not possible_moves:
             for direction in [0, 1, 2, 3]:
                 if self.movementAllowed(direction):
@@ -143,4 +177,4 @@ class Nathan(RobotBase):
         if possible_moves:
             return random.choice(possible_moves)
         else:
-            return 0  # stuck, no move allowed
+            return 0  # stuck, no allowed move
