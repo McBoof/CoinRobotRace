@@ -88,3 +88,6 @@ Preferred communication style: Simple, everyday language.
 
 Changelog:
 - July 07, 2025. Initial setup
+- July 07, 2025. Added organized folder structure with bots/[robot_name]/ containing .py and .png files
+- July 07, 2025. Added movementAllowed() function to RobotBase class for wall collision detection
+- July 07, 2025. Updated all robots to use wall-avoiding random movement patterns

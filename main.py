@@ -6,18 +6,18 @@ import sys
 from robot_base import RobotBase
 
 # Import all robot classes
-from noah import Noah
-from zac import Zac
-from nathan import Nathan
-from eden import Eden
-from samuel import Samuel
-from zak import Zak
-from william import William
-from sophia import Sophia
-from willow import Willow
-from kate import Kate
-from katie import Katie
-from jon import Jon
+from bots.noah.noah import Noah
+from bots.zac.zac import Zac
+from bots.nathan.nathan import Nathan
+from bots.eden.eden import Eden
+from bots.samuel.samuel import Samuel
+from bots.zak.zak import Zak
+from bots.william.william import William
+from bots.sophia.sophia import Sophia
+from bots.willow.willow import Willow
+from bots.kate.kate import Kate
+from bots.katie.katie import Katie
+from bots.jon.jon import Jon
 
 class Game:
     def __init__(self):
