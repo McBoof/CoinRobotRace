@@ -92,3 +92,5 @@ Changelog:
 - July 07, 2025. Added movementAllowed() function to RobotBase class for wall collision detection
 - July 07, 2025. Updated all robots to use wall-avoiding random movement patterns
 - July 07, 2025. Added bash functionality: robots bash every 5 seconds, steal coins, custom insults, red flash effects
+- July 07, 2025. Successfully migrated from Replit Agent to standard Replit environment
+- July 07, 2025. Fixed Eden bot logic to properly seek closest coins instead of moving in single direction
