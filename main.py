@@ -51,11 +51,13 @@ class Game:
         self.coins = []  # List of (x, y) positions
         self.robots = []
         self.speech_bubbles = []  # List of (robot, text, end_time)
+        self.bash_flashes = []  # List of (x, y, end_time) for red flash effects
         
         # Timing
         self.last_coin_spawn = time.time()
         self.last_robot_move = time.time()
         self.last_robot_speak = time.time()
+        self.last_bash_time = time.time()
         
         # Initialize robots
         self.init_robots()
@@ -141,6 +143,49 @@ class Game:
                     robot.x, robot.y = new_x, new_y
                     self.world[new_y][new_x] = robot
     
+    def robot_bash(self):
+        """Make robots bash every 5 seconds"""
+        for robot in self.robots:
+            if robot.alive:
+                try:
+                    bash_dir = robot.bashDirection()
+                    if bash_dir is not None:
+                        # Calculate bash target position
+                        bash_x, bash_y = robot.x, robot.y
+                        if bash_dir == 0:  # North
+                            bash_y -= 1
+                        elif bash_dir == 1:  # East
+                            bash_x += 1
+                        elif bash_dir == 2:  # South
+                            bash_y += 1
+                        elif bash_dir == 3:  # West
+                            bash_x -= 1
+                        
+                        # Check if bash target is within bounds
+                        if 0 <= bash_x < self.WORLD_SIZE and 0 <= bash_y < self.WORLD_SIZE:
+                            # Add flash effect
+                            self.bash_flashes.append((bash_x, bash_y, time.time() + 0.2))
+                            
+                            # Check if there's a robot at the bash position
+                            target_robot = self.world[bash_y][bash_x]
+                            if target_robot and target_robot != robot:
+                                # Get the insult word
+                                insult_word = robot.getBashedInsult()
+                                
+                                # Show bash message
+                                bash_message = f"{robot.name} {insult_word} {target_robot.name}!"
+                                self.add_speech_bubble(robot, bash_message, 3.0)
+                                
+                                # Transfer all coins from target to basher
+                                robot.score += target_robot.score
+                                target_robot.score = 0
+                                
+                                # Show victim's reaction
+                                self.add_speech_bubble(target_robot, "Ouch!", 2.0)
+                                
+                except:
+                    pass  # Ignore bash errors
+
     def robot_speak(self):
         """Make robots speak every 10 seconds"""
         for robot in self.robots:
@@ -164,6 +209,11 @@ class Game:
         """Remove expired speech bubbles"""
         current_time = time.time()
         self.speech_bubbles = [bubble for bubble in self.speech_bubbles if bubble[2] > current_time]
+
+    def update_bash_flashes(self):
+        """Remove expired bash flashes"""
+        current_time = time.time()
+        self.bash_flashes = [flash for flash in self.bash_flashes if flash[2] > current_time]
     
     def draw_world(self):
         """Draw the game world"""
@@ -187,6 +237,12 @@ class Game:
                              (coin_x * self.TILE_SIZE + self.TILE_SIZE // 2,
                               coin_y * self.TILE_SIZE + self.TILE_SIZE // 2), 
                              self.TILE_SIZE // 3)
+
+        # Draw bash flash effects
+        for flash_x, flash_y, end_time in self.bash_flashes:
+            flash_rect = pygame.Rect(flash_x * self.TILE_SIZE, flash_y * self.TILE_SIZE, 
+                                   self.TILE_SIZE, self.TILE_SIZE)
+            pygame.draw.rect(self.screen, self.RED, flash_rect)
         
         # Draw robots
         for robot in self.robots:
@@ -273,10 +329,16 @@ class Game:
             self.move_robots()
             self.last_robot_move = current_time
         
+        # Robots bash every 5 seconds
+        if current_time - self.last_bash_time >= 5.0:
+            self.robot_bash()
+            self.last_bash_time = current_time
+        
         # Robots no longer speak automatically - only when they get coins
         
-        # Update speech bubbles
+        # Update speech bubbles and bash flashes
         self.update_speech_bubbles()
+        self.update_bash_flashes()
     
     def draw(self):
         """Draw everything"""

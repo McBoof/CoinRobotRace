@@ -85,3 +85,21 @@ class RobotBase:
             return self.x > 0
         else:
             return False
+
+    def bashDirection(self):
+        """
+        Override this method to define robot bash behavior.
+        Called every 5 seconds.
+        Returns:
+            int: 0 for north, 1 for east, 2 for south, 3 for west
+        """
+        import random
+        return random.randint(0, 3)
+
+    def getBashedInsult(self):
+        """
+        Override this method to define what insult the robot uses when bashing.
+        Returns:
+            str: The insult word to use (default: "bashed")
+        """
+        return "bashed"

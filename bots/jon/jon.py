@@ -18,3 +18,7 @@ class Jon(RobotBase):
     def celebrate(self):
         """Jon got a coin"""
         return f"{self.name} got a coin!"
+    
+    def getBashedInsult(self):
+        """Jon's bash insult"""
+        return "jabbed"

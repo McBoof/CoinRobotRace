@@ -18,4 +18,8 @@ class Willow(RobotBase):
     def celebrate(self):
         """Willow got a coin"""
         return f"{self.name} got a coin!"
+    
+    def getBashedInsult(self):
+        """Willow's bash insult"""
+        return "whipped"
 

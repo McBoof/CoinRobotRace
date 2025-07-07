@@ -91,3 +91,4 @@ Changelog:
 - July 07, 2025. Added organized folder structure with bots/[robot_name]/ containing .py and .png files
 - July 07, 2025. Added movementAllowed() function to RobotBase class for wall collision detection
 - July 07, 2025. Updated all robots to use wall-avoiding random movement patterns
+- July 07, 2025. Added bash functionality: robots bash every 5 seconds, steal coins, custom insults, red flash effects
