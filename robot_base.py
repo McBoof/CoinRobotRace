@@ -103,3 +103,45 @@ class RobotBase:
             str: The insult word to use (default: "bashed")
         """
         return "bashed"
+
+    def isCoinInDirection(self, direction):
+        """
+        Check for coins in the given direction and return distance to nearest coin.
+        Args:
+            direction (int): 0 for north, 1 for east, 2 for south, 3 for west
+        Returns:
+            int: Number of blocks to nearest coin, or 0 if no coin found
+        """
+        # This will be set by the game engine
+        if not hasattr(self, 'game_instance'):
+            return 0
+            
+        current_x, current_y = self.x, self.y
+        distance = 1
+        
+        while distance < self.world_size:
+            # Calculate position to check
+            check_x, check_y = current_x, current_y
+            
+            if direction == 0:  # North
+                check_y = current_y - distance
+            elif direction == 1:  # East
+                check_x = current_x + distance
+            elif direction == 2:  # South
+                check_y = current_y + distance
+            elif direction == 3:  # West
+                check_x = current_x - distance
+            else:
+                return 0
+            
+            # Check bounds
+            if check_x < 0 or check_x >= self.world_size or check_y < 0 or check_y >= self.world_size:
+                break
+            
+            # Check if there's a coin at this position
+            if (check_x, check_y) in self.game_instance.coins:
+                return distance
+            
+            distance += 1
+        
+        return 0

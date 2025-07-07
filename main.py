@@ -81,6 +81,7 @@ class Game:
             
             # Create robot instance
             robot = robot_class(x, y)
+            robot.game_instance = self  # Give robot access to game instance
             self.robots.append(robot)
             self.world[y][x] = robot
     
