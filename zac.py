@@ -9,4 +9,6 @@ class Zac(RobotBase):
         """Zac moves randomly"""
         return random.randint(0, 3)
     
-
+    def celebrate(self):
+        """Zac got a coin"""
+        return f"{self.name} got a coin!"
