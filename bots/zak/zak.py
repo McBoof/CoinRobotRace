@@ -1,5 +1,6 @@
 from robot_base import RobotBase
 import random
+import pygame
 
 class Zak(RobotBase):
     def __init__(self, x, y):
@@ -37,3 +38,7 @@ class Zak(RobotBase):
     def insult():
         insults = ['gg','zAnked','zAnked. Sincerely.','I have made a severe and continuous lapse in my judgment.',"I'm calling the police.",'what']
         return random.choice(insults)
+    pygame.image.load('bots/zak/zak.png')
+pygame.transform.scale(self.icon_image,(5,5))
+
+
