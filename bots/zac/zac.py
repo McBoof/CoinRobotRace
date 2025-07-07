@@ -2,7 +2,7 @@ import random
 import itertools
 from robot_base import RobotBase
 
-class zac(RobotBase):
+class Zac(RobotBase):
     def __init__(self, x, y, name="zac"):
         super().__init__(x, y, name)
         self.target_route = []  # Planned coin collection route (3 coins lookahead)

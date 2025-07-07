@@ -21,6 +21,7 @@ from bots.jon.jon import Jon
 
 class Game:
     def __init__(self):
+        print("Initializing pygame...")
         pygame.init()
         
         # Game constants
@@ -40,9 +41,16 @@ class Game:
         self.RED = (255, 0, 0)
         self.LIGHT_RED = (255, 150, 150)
         
-        # Initialize pygame
-        self.screen = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
-        pygame.display.set_caption("Robot Simulation Game")
+        # Initialize pygame display
+        print("Creating display...")
+        try:
+            self.screen = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
+            pygame.display.set_caption("Robot Simulation Game")
+            print("Display created successfully")
+        except Exception as e:
+            print(f"Error creating display: {e}")
+            raise
+        
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 24)
         self.small_font = pygame.font.Font(None, 18)
@@ -62,30 +70,44 @@ class Game:
         self.last_bash_time = time.time()
         
         # Initialize robots
+        print("Initializing robots...")
         self.init_robots()
+        print("Robots initialized")
         
         # Game loop control
         self.running = True
         self.game_won = False
         self.winner = None
+        print("Game initialization complete")
         
     def init_robots(self):
         """Initialize all 12 robots with random starting positions"""
         robot_classes = [Noah, Zac, Nathan, Eden, Samuel, Zak, William, Sophia, Willow, Kate, Katie, Jon]
         
         for robot_class in robot_classes:
-            # Find a random empty position
-            while True:
-                x = random.randint(0, self.WORLD_SIZE - 1)
-                y = random.randint(0, self.WORLD_SIZE - 1)
-                if self.world[y][x] is None:
-                    break
-            
-            # Create robot instance
-            robot = robot_class(x, y)
-            robot.game_instance = self  # Give robot access to game instance
-            self.robots.append(robot)
-            self.world[y][x] = robot
+            try:
+                print(f"Initializing {robot_class.__name__}...")
+                # Find a random empty position
+                while True:
+                    x = random.randint(0, self.WORLD_SIZE - 1)
+                    y = random.randint(0, self.WORLD_SIZE - 1)
+                    if self.world[y][x] is None:
+                        break
+                
+                # Create robot instance
+                robot = robot_class(x, y)
+                robot.game_instance = self  # Give robot access to game instance
+                
+                # The robot's __init__ already calls loadIcon, so no need to call it again
+                
+                self.robots.append(robot)
+                self.world[y][x] = robot
+                print(f"{robot_class.__name__} initialized successfully")
+                
+            except Exception as e:
+                print(f"Error initializing {robot_class.__name__}: {e}")
+                # Continue with other robots instead of crashing
+                continue
     
     def spawn_coin(self):
         """Spawn a coin at a random empty position"""
@@ -236,12 +258,12 @@ class Game:
         
         # Draw grid
         for x in range(self.WORLD_SIZE + 1):
-            pygame.draw.line(self.screen, self.LIGHT_GRAY, 
+            pygame.draw.line(self.screen, self.GRAY, 
                            (x * self.TILE_SIZE, 0), 
                            (x * self.TILE_SIZE, self.WORLD_SIZE * self.TILE_SIZE))
         
         for y in range(self.WORLD_SIZE + 1):
-            pygame.draw.line(self.screen, self.LIGHT_GRAY, 
+            pygame.draw.line(self.screen, self.GRAY, 
                            (0, y * self.TILE_SIZE), 
                            (self.WORLD_SIZE * self.TILE_SIZE, y * self.TILE_SIZE))
         
@@ -378,15 +400,27 @@ class Game:
     
     def run(self):
         """Main game loop"""
-        while self.running:
-            self.handle_events()
-            self.update()
-            self.draw()
-            self.clock.tick(60)  # 60 FPS
-        
-        pygame.quit()
-        sys.exit()
+        print("Starting game loop...")
+        try:
+            while self.running:
+                self.handle_events()
+                self.update()
+                self.draw()
+                self.clock.tick(60)  # 60 FPS
+        except Exception as e:
+            print(f"Error in game loop: {e}")
+            raise
+        finally:
+            pygame.quit()
+            sys.exit()
 
 if __name__ == "__main__":
-    game = Game()
-    game.run()
+    try:
+        print("Creating game instance...")
+        game = Game()
+        print("Game created, starting run...")
+        game.run()
+    except Exception as e:
+        print(f"Fatal error: {e}")
+        import traceback
+        traceback.print_exc()

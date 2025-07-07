@@ -45,18 +45,40 @@ class RobotBase:
             pygame.Surface: The loaded icon image
         """
         icon_path = f"bots/{self.name.lower()}/{self.name.lower()}.png"
+        print(f"Loading icon from: {icon_path}")
+        
         if os.path.exists(icon_path):
             try:
-                return pygame.image.load(icon_path)
-            except:
+                print(f"File exists, loading PNG for {self.name}")
+                # Add timeout protection by using a smaller load operation
+                import signal
+                
+                def timeout_handler(signum, frame):
+                    raise TimeoutError("PNG loading timed out")
+                
+                signal.signal(signal.SIGALRM, timeout_handler)
+                signal.alarm(3)  # 3 second timeout
+                
+                loaded_icon = pygame.image.load(icon_path)
+                signal.alarm(0)  # Cancel the alarm
+                
+                print(f"Successfully loaded PNG for {self.name}")
+                self.icon_image = loaded_icon
+                return loaded_icon
+            except Exception as e:
+                signal.alarm(0)  # Cancel the alarm
+                print(f"Error loading PNG for {self.name}: {e}")
                 # If loading fails, create a default colored rectangle
                 surface = pygame.Surface((24, 24))
                 surface.fill((random.randint(100, 255), random.randint(100, 255), random.randint(100, 255)))
+                self.icon_image = surface
                 return surface
         else:
+            print(f"PNG file not found for {self.name}, creating default")
             # If file doesn't exist, create a default colored rectangle
             surface = pygame.Surface((24, 24))
             surface.fill((random.randint(100, 255), random.randint(100, 255), random.randint(100, 255)))
+            self.icon_image = surface
             return surface
     
     def getIcon(self):
