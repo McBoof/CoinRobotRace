@@ -4,8 +4,11 @@ import pygame
 
 class Zak(RobotBase):
     def __init__(self, x, y):
-        super().__init__(x, y, "Zak")
+        super().__init__(x, y)
+        
+
     
+
     def getMoveDirection(self):
         """Zak moves randomly, avoiding walls"""
         # Example: Check for coins in all directions (but don't use the information)
@@ -38,7 +41,3 @@ class Zak(RobotBase):
     def insult():
         insults = ['gg','zAnked','zAnked. Sincerely.','I have made a severe and continuous lapse in my judgment.',"I'm calling the police.",'what']
         return random.choice(insults)
-    pygame.image.load('bots/zak/zak.png')
-pygame.transform.scale(self.icon_image,(5,5))
-
-
