@@ -82,7 +82,8 @@ class Game:
         
     def init_robots(self):
         """Initialize all 12 robots with random starting positions"""
-        robot_classes = [Noah, Zac, Nathan, Eden, Samuel, Zak, William, Sophia, Willow, Kate, Katie, Jon]
+        # Temporarily skip problematic robots to get the game working
+        robot_classes = [Noah, Zac, Nathan, Eden, Zak, William, Sophia, Willow, Kate, Katie, Jon]  # Skip Samuel for now
         
         for robot_class in robot_classes:
             try:
