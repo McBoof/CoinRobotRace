@@ -1,47 +1,52 @@
 import pygame
 import os
 
-# Initialize pygame
-pygame.init()
-
-# Create a simple robot icon (24x24 pixels to match tile size)
-def create_robot_icon(filename):
-    # Create a surface
-    surface = pygame.Surface((24, 24), pygame.SRCALPHA)
+def create_robot_icon(filename, color):
+    """Create a simple robot icon with the given color"""
+    # Initialize pygame
+    pygame.init()
     
-    # Fill with transparent background
-    surface.fill((0, 0, 0, 0))
+    # Create a 24x24 surface
+    surface = pygame.Surface((24, 24))
+    surface.fill((255, 255, 255))  # White background
     
-    # Draw a simple robot shape
-    # Body (rectangle)
-    pygame.draw.rect(surface, (100, 100, 100), (6, 8, 12, 10))
-    
+    # Draw robot shape
     # Head (circle)
-    pygame.draw.circle(surface, (150, 150, 150), (12, 6), 4)
+    pygame.draw.circle(surface, color, (12, 8), 6)
     
-    # Eyes (small circles)
-    pygame.draw.circle(surface, (255, 255, 255), (10, 5), 1)
-    pygame.draw.circle(surface, (255, 255, 255), (14, 5), 1)
+    # Body (rectangle)
+    pygame.draw.rect(surface, color, (8, 12, 8, 8))
     
-    # Antenna (line)
-    pygame.draw.line(surface, (200, 200, 200), (12, 2), (12, 4), 1)
+    # Arms (small rectangles)
+    pygame.draw.rect(surface, color, (4, 14, 3, 4))
+    pygame.draw.rect(surface, color, (17, 14, 3, 4))
     
-    # Arms (rectangles)
-    pygame.draw.rect(surface, (120, 120, 120), (2, 10, 4, 2))
-    pygame.draw.rect(surface, (120, 120, 120), (18, 10, 4, 2))
-    
-    # Legs (rectangles)
-    pygame.draw.rect(surface, (80, 80, 80), (8, 18, 2, 4))
-    pygame.draw.rect(surface, (80, 80, 80), (14, 18, 2, 4))
+    # Eyes (black dots)
+    pygame.draw.circle(surface, (0, 0, 0), (10, 7), 1)
+    pygame.draw.circle(surface, (0, 0, 0), (14, 7), 1)
     
     # Save the image
     pygame.image.save(surface, filename)
+    print(f"Created {filename}")
 
-# Create robot icons for all robots
-robot_names = ['noah', 'zac', 'nathan', 'eden', 'samuel', 'zak', 'william', 'sophia', 'willow', 'kate', 'katie', 'jon']
+# Create unique colored icons for each robot
+robots = {
+    'noah': (255, 100, 100),    # Red
+    'zac': (100, 255, 100),     # Green
+    'nathan': (100, 100, 255),  # Blue
+    'eden': (255, 255, 100),    # Yellow
+    'samuel': (255, 100, 255),  # Magenta
+    'zak': (100, 255, 255),     # Cyan
+    'william': (255, 165, 0),   # Orange
+    'sophia': (128, 0, 128),    # Purple
+    'willow': (255, 192, 203),  # Pink
+    'kate': (165, 42, 42),      # Brown
+    'katie': (0, 128, 128),     # Teal
+    'jon': (128, 128, 128)      # Gray
+}
 
-for name in robot_names:
-    create_robot_icon(f"{name}.png")
-    print(f"Created {name}.png")
+for robot_name, color in robots.items():
+    filename = f"bots/{robot_name}/{robot_name}.png"
+    create_robot_icon(filename, color)
 
-print("All robot icons created!")
+print("All robot icons created successfully!")
