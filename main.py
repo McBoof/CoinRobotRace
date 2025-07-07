@@ -232,8 +232,8 @@ class Game:
         # Sort robots by score (descending)
         sorted_robots = sorted(self.robots, key=lambda r: r.score, reverse=True)
         
-        # Draw leaderboard background (semi-transparent)
-        leaderboard_x = self.WORLD_SIZE * self.TILE_SIZE + 10
+        # Draw leaderboard background (semi-transparent, top left)
+        leaderboard_x = 10
         leaderboard_y = 10
         leaderboard_width = 180
         leaderboard_height = len(sorted_robots) * 25 + 40
