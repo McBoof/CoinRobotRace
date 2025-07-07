@@ -4,7 +4,7 @@ import random
 class Jon(RobotBase):
     def __init__(self, x, y):
         super().__init__(x, y, "Jon")
-        self.patrol_route = [(10, 10), (90, 10), (90, 90), (10, 90)]
+        self.patrol_route = [(5, 5), (25, 5), (25, 25), (5, 25)]
         self.current_target = 0
     
     def getMoveDirection(self):

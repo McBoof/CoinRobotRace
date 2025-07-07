@@ -11,13 +11,13 @@ class Kate(RobotBase):
         valid_directions = []
         
         # Check which directions are safe (not too close to edges)
-        if self.y > 5:  # Not too close to top
+        if self.y > 2:  # Not too close to top
             valid_directions.append(0)  # North
-        if self.x < 94:  # Not too close to right
+        if self.x < 27:  # Not too close to right
             valid_directions.append(1)  # East
-        if self.y < 94:  # Not too close to bottom
+        if self.y < 27:  # Not too close to bottom
             valid_directions.append(2)  # South
-        if self.x > 5:  # Not too close to left
+        if self.x > 2:  # Not too close to left
             valid_directions.append(3)  # West
         
         if valid_directions:

@@ -24,7 +24,7 @@ class Game:
         pygame.init()
         
         # Game constants
-        self.WORLD_SIZE = 100
+        self.WORLD_SIZE = 30
         self.TILE_SIZE = 8
         self.WINDOW_WIDTH = self.WORLD_SIZE * self.TILE_SIZE + 200  # Extra space for UI
         self.WINDOW_HEIGHT = self.WORLD_SIZE * self.TILE_SIZE

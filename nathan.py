@@ -4,15 +4,15 @@ import random
 class Nathan(RobotBase):
     def __init__(self, x, y):
         super().__init__(x, y, "Nathan")
-        self.target_x = random.randint(0, 99)
-        self.target_y = random.randint(0, 99)
+        self.target_x = random.randint(0, 29)
+        self.target_y = random.randint(0, 29)
     
     def getMoveDirection(self):
         """Nathan tries to reach random target points"""
         if self.x == self.target_x and self.y == self.target_y:
             # Reached target, pick a new one
-            self.target_x = random.randint(0, 99)
-            self.target_y = random.randint(0, 99)
+            self.target_x = random.randint(0, 29)
+            self.target_y = random.randint(0, 29)
         
         # Move toward target
         if self.x < self.target_x:

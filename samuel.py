@@ -11,11 +11,11 @@ class Samuel(RobotBase):
         # Check if we're at world boundaries and need to bounce
         if self.x == 0 and self.bounce_direction == 3:  # Hit left wall
             self.bounce_direction = 1  # Go east
-        elif self.x == 99 and self.bounce_direction == 1:  # Hit right wall
+        elif self.x == 29 and self.bounce_direction == 1:  # Hit right wall
             self.bounce_direction = 3  # Go west
         elif self.y == 0 and self.bounce_direction == 0:  # Hit top wall
             self.bounce_direction = 2  # Go south
-        elif self.y == 99 and self.bounce_direction == 2:  # Hit bottom wall
+        elif self.y == 29 and self.bounce_direction == 2:  # Hit bottom wall
             self.bounce_direction = 0  # Go north
         
         return self.bounce_direction
